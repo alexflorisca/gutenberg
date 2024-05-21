@@ -551,14 +551,12 @@ module.exports = {
 		{
 			files: [ 'packages/interactivity*/src/**' ],
 			rules: {
+				'react-compiler/react-compiler': 'off',
 				'react/react-in-jsx-scope': 'error',
 			},
 		},
 		{
-			files: [
-				'packages/interactivity-router/src/index.js',
-				...developmentFiles,
-			],
+			files: [ ...developmentFiles ],
 			rules: {
 				'react-compiler/react-compiler': 'off',
 			},

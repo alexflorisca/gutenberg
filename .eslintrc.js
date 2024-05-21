@@ -556,8 +556,8 @@ module.exports = {
 		},
 		{
 			files: [
-				'packages/dependency-extraction-webpack-plugin/test/**',
 				'packages/interactivity-router/src/index.js',
+				...developmentFiles,
 			],
 			rules: {
 				'react-compiler/react-compiler': 'off',

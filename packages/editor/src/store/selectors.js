@@ -1702,16 +1702,11 @@ export const getBlockListSettings = getBlockEditorSelector(
 	'getBlockListSettings'
 );
 
-/**
- * Returns the default template types.
- *
- * @param {Object} state Global application state.
- *
- * @return {Object} The template types.
- */
-export function __experimentalGetDefaultTemplateTypes( state ) {
-	return getEditorSettings( state )?.defaultTemplateTypes;
-}
+export const __experimentalGetDefaultTemplateTypes = createRegistrySelector(
+	( select ) => () =>
+		select( coreStore ).getEntityRecord( 'root', '__unstableBase' )
+			?.defaultTemplateTypes
+);
 
 /**
  * Returns the default template part areas.
@@ -1720,15 +1715,16 @@ export function __experimentalGetDefaultTemplateTypes( state ) {
  *
  * @return {Array} The template part areas.
  */
-export const __experimentalGetDefaultTemplatePartAreas = createSelector(
-	( state ) => {
+export const __experimentalGetDefaultTemplatePartAreas = createRegistrySelector(
+	( select ) => () => {
 		const areas =
-			getEditorSettings( state )?.defaultTemplatePartAreas ?? [];
+			select( coreStore ).getEntityRecord( 'root', '__unstableBase' )
+				?.defaultTemplatePartAreas ?? [];
+
 		return areas.map( ( item ) => {
 			return { ...item, icon: getTemplatePartIcon( item.icon ) };
 		} );
-	},
-	( state ) => [ getEditorSettings( state )?.defaultTemplatePartAreas ]
+	}
 );
 
 /**

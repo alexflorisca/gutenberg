@@ -29,8 +29,6 @@ import {
 } from '@wordpress/icons';
 import { store as noticesStore } from '@wordpress/notices';
 // @ts-ignore
-import { store as blockEditorStore } from '@wordpress/block-editor';
-// @ts-ignore
 import { serialize } from '@wordpress/blocks';
 
 /**
@@ -98,17 +96,14 @@ const getTemplatePartIcon = ( iconName: string ) => {
 };
 
 const getDefaultTemplatePartAreas = (
-	settings: Record< string, any > & {
-		defaultTemplatePartAreas?: Array< {
-			icon: string;
-			label: string;
-			area: string;
-			description: string;
-		} >;
-	}
+	defaultTemplatePartAreas: Array< {
+		icon: string;
+		label: string;
+		area: string;
+		description: string;
+	} >
 ) => {
-	const areas = settings.defaultTemplatePartAreas ?? [];
-	return areas.map( ( item ) => {
+	return defaultTemplatePartAreas.map( ( item ) => {
 		return { ...item, icon: getTemplatePartIcon( item.icon ) };
 	} );
 };
@@ -144,13 +139,26 @@ export function CreateTemplatePartModalContents( {
 	const [ isSubmitting, setIsSubmitting ] = useState( false );
 	const instanceId = useInstanceId( CreateTemplatePartModal );
 
-	const settings = useSelect(
+	const { defaultTemplatePartAreas } = useSelect(
 		// @ts-ignore
-		( select ) => select( blockEditorStore ).getSettings(),
+		( select ) => {
+			return {
+				defaultTemplatePartAreas: getDefaultTemplatePartAreas(
+					// @ts-expect-error The defaultTemplatePartAreas is not part of the core store type.
+					select( coreStore ).getEntityRecord< {
+						defaultTemplatePartAreas: Array< {
+							icon: string;
+							label: string;
+							area: string;
+							description: string;
+						} >;
+					} >( 'root', '__unstableBase' )?.defaultTemplatePartAreas ??
+						[]
+				),
+			};
+		},
 		[]
 	);
-
-	const defaultTemplatePartAreas = getDefaultTemplatePartAreas( settings );
 
 	async function createTemplatePart() {
 		if ( ! title || isSubmitting ) {

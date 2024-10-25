@@ -92,7 +92,8 @@
 		"webpack": "^5.95.0",
 		"webpack-bundle-analyzer": "^4.9.1",
 		"webpack-cli": "^5.1.4",
-		"webpack-dev-server": "^4.15.1"
+		"webpack-dev-server": "^4.15.1",
+		"webpack-remove-empty-scripts": "1.0.4"
 	},
 	"peerDependencies": {
 		"@playwright/test": "^1.48.1",

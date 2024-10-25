@@ -186,10 +186,11 @@ function getWordPressSrcDirectory() {
 }
 
 /**
- * Detects the list of entry points to use with webpack. There are three ways to do this:
+ * Detects the list of entry points to use with webpack. There are several steps:
  *  1. Use the legacy webpack 4 format passed as CLI arguments.
- *  2. Scan `block.json` files for scripts.
- *  3. Fallback to `src/index.*` file.
+ *  2. Scan `block.json` files for scripts listed.
+ *  3. Add `src/index.*` JavaScript file when exists.
+ *  4. Add `src/style.*` CSS file when exists.
  *
  * @see https://webpack.js.org/concepts/entry-points/
  *
@@ -200,11 +201,13 @@ function getWebpackEntryPoints( buildType ) {
 	 * @return {Object<string,string>} The list of entry points.
 	 */
 	return () => {
+		const entryPoints = {};
+
 		// 1. Handles the legacy format for entry points when explicitly provided with the `process.env.WP_ENTRY`.
 		if ( process.env.WP_ENTRY ) {
 			return buildType === 'script'
 				? JSON.parse( process.env.WP_ENTRY )
-				: {};
+				: entryPoints;
 		}
 
 		// Continue only if the source directory exists.
@@ -214,7 +217,7 @@ function getWebpackEntryPoints( buildType ) {
 					`Source directory "${ getWordPressSrcDirectory() }" was not found. Please confirm there is a "src" directory in the root or the value passed to --webpack-src-dir is correct.`
 				)
 			);
-			return {};
+			return entryPoints;
 		}
 
 		// 2. Checks whether any block metadata files can be detected in the defined source directory.
@@ -229,14 +232,12 @@ function getWebpackEntryPoints( buildType ) {
 				getWordPressSrcDirectory() + sep
 			);
 
-			const entryPoints = {};
-
 			for ( const blockMetadataFile of blockMetadataFiles ) {
 				const fileContents = readFileSync( blockMetadataFile );
 				let parsedBlockJson;
-				// wrapping in try/catch in case the file is malformed
-				// this happens especially when new block.json files are added
-				// at which point they are completely empty and therefore not valid JSON
+				// Wrapping in try/catch in case the file is malformed.
+				// This happens especially when new block.json files are added,
+				// at which point they are completely empty and therefore not valid JSON.
 				try {
 					parsedBlockJson = JSON.parse( fileContents );
 				} catch ( error ) {
@@ -246,6 +247,7 @@ function getWebpackEntryPoints( buildType ) {
 							''
 						) }" due to malformed JSON.`
 					);
+					continue;
 				}
 
 				const fields =
@@ -281,7 +283,7 @@ function getWebpackEntryPoints( buildType ) {
 								) }". File is located outside of the "${ getWordPressSrcDirectory() }" directory.`
 							)
 						);
-						return;
+						continue;
 					}
 					const entryName = filepath
 						.replace( extname( filepath ), '' )
@@ -309,42 +311,53 @@ function getWebpackEntryPoints( buildType ) {
 								) }". File does not exist in the "${ getWordPressSrcDirectory() }" directory.`
 							)
 						);
-						return;
+						continue;
 					}
 					entryPoints[ entryName ] = entryFilepath;
 				}
-			}
-
-			if ( Object.keys( entryPoints ).length > 0 ) {
-				return entryPoints;
 			}
 		}
 
 		// Don't do any further processing if this is a module build.
 		// This only respects *module block.json fields.
 		if ( buildType === 'module' ) {
-			return {};
+			return entryPoints;
 		}
 
-		// 3. Checks whether a standard file name can be detected in the defined source directory,
-		//  and converts the discovered file to entry point.
-		const [ entryFile ] = glob( 'index.[jt]s?(x)', {
-			absolute: true,
-			cwd: fromProjectRoot( getWordPressSrcDirectory() ),
-		} );
+		const hasBlockJsonInRoot = blockMetadataFiles.includes(
+			fromProjectRoot( getWordPressSrcDirectory() ) + sep + 'block.json'
+		);
+		if ( ! hasBlockJsonInRoot ) {
+			// 3. Checks whether a standard JavaScript file name can be detected in the defined source directory,
+			//    and converts the discovered file to an entry point.
+			const [ entryJavaScriptFile ] = glob( 'index.?(m)[jt]s?(x)', {
+				absolute: true,
+				cwd: fromProjectRoot( getWordPressSrcDirectory() ),
+			} );
+			if ( entryJavaScriptFile ) {
+				entryPoints.index = entryJavaScriptFile;
+			}
 
-		if ( ! entryFile ) {
+			// 4. Checks whether a standard CSS file name can be detected in the defined source directory,
+			//    and converts the discovered file to an entry point.
+			const [ entryCSSFile ] = glob( 'style.(pc|sc|sa|c)ss', {
+				absolute: true,
+				cwd: fromProjectRoot( getWordPressSrcDirectory() ),
+			} );
+			if ( entryCSSFile ) {
+				entryPoints.style = entryCSSFile;
+			}
+		}
+
+		if ( Object.keys( entryPoints ).length === 0 ) {
 			log(
 				chalk.yellow(
-					`No entry file discovered in the "${ getWordPressSrcDirectory() }" directory.`
+					`No entry points discovered in the "${ getWordPressSrcDirectory() }" directory.`
 				)
 			);
-			return {};
 		}
 
-		return {
-			index: entryFile,
-		};
+		return entryPoints;
 	};
 }
 

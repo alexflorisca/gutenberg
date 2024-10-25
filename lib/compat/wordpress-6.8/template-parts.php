@@ -31,7 +31,7 @@ function gutenberg_add_default_template_types_to_index( WP_REST_Response $respon
 		$indexed_template_types[] = $template_type;
 	}
 
-	$response->data['defaultTemplateTypes'] = indexed_template_types();
+	$response->data['defaultTemplateTypes'] = $indexed_template_types;
 	return $response;
 }
 

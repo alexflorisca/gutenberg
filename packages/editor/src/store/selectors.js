@@ -1716,15 +1716,16 @@ export const __experimentalGetDefaultTemplateTypes = createRegistrySelector(
  * @return {Array} The template part areas.
  */
 export const __experimentalGetDefaultTemplatePartAreas = createRegistrySelector(
-	( select ) => () => {
-		const areas =
-			select( coreStore ).getEntityRecord( 'root', '__unstableBase' )
-				?.defaultTemplatePartAreas ?? [];
+	( select ) =>
+		createSelector( () => {
+			const areas =
+				select( coreStore ).getEntityRecord( 'root', '__unstableBase' )
+					?.defaultTemplatePartAreas || [];
 
-		return areas.map( ( item ) => {
-			return { ...item, icon: getTemplatePartIcon( item.icon ) };
-		} );
-	}
+			return areas.map( ( item ) => {
+				return { ...item, icon: getTemplatePartIcon( item.icon ) };
+			} );
+		} )
 );
 
 /**

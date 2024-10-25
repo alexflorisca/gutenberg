@@ -55,7 +55,7 @@ const {
 const { mergeBaseAndUserConfigs } = unlock( editorPrivateApis );
 
 const { Tabs } = unlock( componentsPrivateApis );
-const noop = () => {};
+
 function isObjectEmpty( object ) {
 	return ! object || Object.keys( object ).length === 0;
 }
@@ -175,10 +175,10 @@ function useMultiOriginPalettes() {
 function StyleBook( {
 	enableResizing = true,
 	isSelected,
-	onClick = noop,
-	onSelect = noop,
+	onClick,
+	onSelect,
 	showCloseButton = true,
-	onClose = noop,
+	onClose,
 	showTabs = true,
 	userConfig = {},
 	path = '',
@@ -412,10 +412,8 @@ const Examples = memo(
 							title={ example.title }
 							content={ example.content }
 							blocks={ example.blocks }
-							isSelected={ isSelected( example.name ) }
-							onClick={ () => {
-								onSelect?.( example.name );
-							} }
+							isSelected={ isSelected?.( example.name ) }
+							onClick={ () => onSelect?.( example.name ) }
 						/>
 					) ) }
 				{ !! filteredExamples?.subcategories?.length &&
@@ -451,7 +449,7 @@ const Subcategory = ( { examples, isSelected, onSelect } ) => {
 				title={ example.title }
 				content={ example.content }
 				blocks={ example.blocks }
-				isSelected={ isSelected( example.name ) }
+				isSelected={ isSelected?.( example.name ) }
 				onClick={ () => {
 					onSelect?.( example.name );
 				} }

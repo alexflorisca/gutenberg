@@ -342,10 +342,12 @@ export const ExperimentalEditorProvider = withRegistryProvider(
 							{ children }
 							{ ! settings.__unstableIsPreviewMode && (
 								<>
-									<PatternsMenuItems />
-									<TemplatePartMenuItems />
 									{ ! isZoomOut && (
-										<ContentOnlySettingsMenu />
+										<>
+											<PatternsMenuItems />
+											<TemplatePartMenuItems />
+											<ContentOnlySettingsMenu />
+										</>
 									) }
 									{ mode === 'template-locked' && (
 										<DisableNonPageContentBlocks />

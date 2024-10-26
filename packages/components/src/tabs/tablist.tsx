@@ -49,9 +49,9 @@ function useScrollRectIntoView(
 		const rightOverflow = childRightEdge + margin - parentRightEdge;
 		const leftOverflow = parentScroll - ( childLeft - margin );
 		if ( leftOverflow > 0 ) {
-			parent.scrollLeft = parentScroll - leftOverflow;
+			parent.scroll( { left: parentScroll - leftOverflow } );
 		} else if ( rightOverflow > 0 ) {
-			parent.scrollLeft = parentScroll + rightOverflow;
+			parent.scroll( { left: parentScroll + rightOverflow } );
 		}
 	}, [ margin, parent, rect ] );
 }

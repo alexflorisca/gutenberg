@@ -103,6 +103,10 @@
 	}
 }
 
-.editor-document-bar__icon-layout {
+.editor-document-bar__icon-layout.editor-document-bar__icon-layout {
 	position: absolute;
+
+	svg {
+		fill: $gray-600;
+	}
 }

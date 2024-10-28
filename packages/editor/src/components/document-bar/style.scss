@@ -105,8 +105,11 @@
 
 .editor-document-bar__icon-layout.editor-document-bar__icon-layout {
 	position: absolute;
-
+	display: none;
 	svg {
 		fill: $gray-600;
+	}
+	@include break-small {
+		display: flex;
 	}
 }

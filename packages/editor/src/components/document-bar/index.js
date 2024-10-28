@@ -15,7 +15,7 @@ import {
 	__unstableAnimatePresence as AnimatePresence,
 } from '@wordpress/components';
 import { BlockIcon } from '@wordpress/block-editor';
-import { chevronLeftSmall, chevronRightSmall } from '@wordpress/icons';
+import { chevronLeftSmall, chevronRightSmall, layout } from '@wordpress/icons';
 import { displayShortcut } from '@wordpress/keycodes';
 import { store as coreStore } from '@wordpress/core-data';
 import { store as commandsStore } from '@wordpress/commands';
@@ -58,12 +58,14 @@ export default function DocumentBar( props ) {
 		isNotFound,
 		templateTitle,
 		onNavigateToPreviousEntityRecord,
+		isTemplatePreview,
 	} = useSelect( ( select ) => {
 		const {
 			getCurrentPostType,
 			getCurrentPostId,
 			getEditorSettings,
 			__experimentalGetTemplateInfo: getTemplateInfo,
+			getRenderingMode,
 		} = select( editorStore );
 		const {
 			getEditedEntityRecord,
@@ -95,6 +97,7 @@ export default function DocumentBar( props ) {
 			templateTitle: _templateInfo.title,
 			onNavigateToPreviousEntityRecord:
 				getEditorSettings().onNavigateToPreviousEntityRecord,
+			isTemplatePreview: getRenderingMode() === 'template-locked',
 		};
 	}, [] );
 
@@ -141,6 +144,12 @@ export default function DocumentBar( props ) {
 					>
 						{ __( 'Back' ) }
 					</MotionButton>
+				) }
+				{ ! isTemplate && isTemplatePreview && (
+					<BlockIcon
+						icon={ layout }
+						className="editor-document-bar__icon-layout"
+					/>
 				) }
 			</AnimatePresence>
 			{ isNotFound ? (

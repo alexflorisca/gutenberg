@@ -88,8 +88,13 @@ const scrollToSection = ( anchorId, iframe ) => {
  * @return {null|{block: string}} An object containing the example to navigate to.
  */
 const getStyleBookNavigationFromPath = ( path ) => {
-	if ( path && typeof path === 'string' && path.includes( '/blocks/' ) ) {
-		const block = decodeURIComponent( path.split( '/blocks/' )[ 1 ] );
+	if ( path && typeof path === 'string' ) {
+		let block = path.includes( '/blocks/' )
+			? decodeURIComponent( path.split( '/blocks/' )[ 1 ] )
+			: null;
+		// Default to theme-colors if the path ends with /colors.
+		block = path.endsWith( '/colors' ) ? 'theme-colors' : block;
+
 		return {
 			block,
 		};

@@ -63,6 +63,88 @@ function getColorExamples( colors: MultiOriginPalettes ): BlockExample[] {
 }
 
 /**
+ * Returns examples for the landing page.
+ *
+ * @param {MultiOriginPalettes} colors Global Styles color palettes per origin.
+ * @return {BlockExample[]} An array of block examples.
+ */
+function getLandingBlockExamples(
+	colors: MultiOriginPalettes
+): BlockExample[] {
+	const examples: BlockExample[] = [];
+
+	// Get theme palette from colors.
+	const themePalette = colors.colors.find(
+		( origin: ColorOrigin ) => origin.slug === 'theme'
+	);
+
+	const themeColorexample: BlockExample = {
+		name: 'theme-colors',
+		title: __( 'Theme Colors' ),
+		category: 'landing',
+		content: (
+			<ColorExamples colors={ themePalette.colors } type={ colors } />
+		),
+	};
+
+	examples.push( themeColorexample );
+
+	// Use our own example for the Heading block so that we can show multiple
+	// heading levels.
+	// (duplicate for now)
+	const headingsExample = {
+		name: 'core/heading',
+		title: __( 'Headings' ),
+		category: 'landing',
+		blocks: createBlock( 'core/heading', {
+			content: `AaBbCcDdEeFfGgHhIi
+				JjKkLlMmNnOoPpQqRrSs
+				TtUuVvWwXxYyZz
+				0123456789{(...)},?!*&:;_@#$`,
+			level: 1,
+		} ),
+	};
+	examples.push( headingsExample );
+
+	const paragraphExample = {
+		name: 'core/paragraph',
+		title: __( 'Paragraphs' ),
+		category: 'landing',
+		blocks: createBlock( 'core/paragraph', {
+			content: `There was an Old Man of Vienna, 
+					Who lived upon Tincture of Senna; 
+					When that did not agree, he took Camomile Tea, 
+					That nasty Old Man of Vienna.`,
+		} ),
+	};
+	examples.push( paragraphExample );
+
+	const otherBlockExamples = [
+		'core/image',
+		'core/separator',
+		'core/buttons',
+		'core/pullquote',
+		'core/search',
+	];
+
+	// Get examples for other blocks and put them in order of above array.
+	otherBlockExamples.forEach( ( blockName ) => {
+		const blockType = getBlockType( blockName );
+		if ( blockType && blockType.example ) {
+			const blockExample: BlockExample = {
+				name: blockName,
+				title: blockType.title,
+				category: 'landing',
+				blocks: getBlockFromExample( blockName, blockType.example ),
+			};
+			examples.push( blockExample );
+		}
+	} );
+
+	return examples;
+}
+
+/**
  * Returns a list of examples for registered block types.
  *
  * @param {MultiOriginPalettes} colors Global styles colors grouped by origin e.g. Core, Theme, and User.
@@ -109,5 +191,12 @@ export function getExamples( colors: MultiOriginPalettes ): BlockExample[] {
 	};
 	const colorExamples = getColorExamples( colors );
 
-	return [ headingsExample, ...colorExamples, ...nonHeadingBlockExamples ];
+	const landingBlockExamples = getLandingBlockExamples( colors );
+
+	return [
+		headingsExample,
+		...colorExamples,
+		...nonHeadingBlockExamples,
+		...landingBlockExamples,
+	];
 }

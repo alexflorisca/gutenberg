@@ -78,16 +78,18 @@ function getLandingBlockExamples(
 		( origin: ColorOrigin ) => origin.slug === 'theme'
 	);
 
-	const themeColorexample: BlockExample = {
-		name: 'theme-colors',
-		title: __( 'Theme Colors' ),
-		category: 'landing',
-		content: (
-			<ColorExamples colors={ themePalette.colors } type={ colors } />
-		),
-	};
+	if ( themePalette ) {
+		const themeColorexample: BlockExample = {
+			name: 'theme-colors',
+			title: __( 'Theme Colors' ),
+			category: 'landing',
+			content: (
+				<ColorExamples colors={ themePalette.colors } type={ colors } />
+			),
+		};
 
-	examples.push( themeColorexample );
+		examples.push( themeColorexample );
+	}
 
 	// Use our own example for the Heading block so that we can show multiple
 	// heading levels.

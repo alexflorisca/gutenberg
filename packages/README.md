@@ -45,7 +45,7 @@ When creating a new package, you need to provide at least the following. Package
 
     For production packages that will ship as a WordPress script, include `wpScript: true` in the `package.json` file. This tells the build system to bundle the package for use as a WordPress script.
 
-    For productions packages that will ship as a WordPress script module, include a `wpScriptModuleExports` field the `package.json` file. The value of this field can be a string to expose a single script module, or an object with a [shape like the standard `exports` object](https://nodejs.org/docs/latest-v20.x/api/packages.html#subpath-exports) to expose multiple script modules from a single package:
+    For production packages that will ship as a WordPress script module, include a `wpScriptModuleExports` field in the `package.json` file. The value of this field can be a string to expose a single script module, or an object with a [shape like the standard `exports` object](https://nodejs.org/docs/latest-v20.x/api/packages.html#subpath-exports) to expose multiple script modules from a single package:
 
     ```jsonc
     {

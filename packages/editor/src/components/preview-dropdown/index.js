@@ -38,8 +38,10 @@ export default function PreviewDropdown( { forceIsAutosaveable, disabled } ) {
 		isViewable,
 		showIconLabels,
 		isTemplateHidden,
+		templateId,
 	} = useSelect( ( select ) => {
-		const { getDeviceType, getCurrentPostType } = select( editorStore );
+		const { getDeviceType, getCurrentPostType, getCurrentTemplateId } =
+			select( editorStore );
 		const { getRenderingMode } = unlock( select( editorStore ) );
 		const { getEntityRecord, getPostType } = select( coreStore );
 		const { get } = select( preferencesStore );
@@ -51,6 +53,7 @@ export default function PreviewDropdown( { forceIsAutosaveable, disabled } ) {
 			isViewable: getPostType( _currentPostType )?.viewable ?? false,
 			showIconLabels: get( 'core', 'showIconLabels' ),
 			isTemplateHidden: getRenderingMode() === 'post-only',
+			templateId: getCurrentTemplateId(),
 		};
 	}, [] );
 	const { setDeviceType, setRenderingMode } = useDispatch( editorStore );
@@ -150,7 +153,7 @@ export default function PreviewDropdown( { forceIsAutosaveable, disabled } ) {
 							</MenuItem>
 						</MenuGroup>
 					) }
-					{ ! isTemplate && (
+					{ ! isTemplate && !! templateId && (
 						<MenuGroup>
 							<MenuItem
 								icon={ ! isTemplateHidden ? check : undefined }

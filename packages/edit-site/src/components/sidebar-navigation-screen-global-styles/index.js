@@ -4,11 +4,9 @@
 import { __ } from '@wordpress/i18n';
 import { useSelect, useDispatch } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
-import { useViewportMatch } from '@wordpress/compose';
-import { useCallback, useState } from '@wordpress/element';
+import { useCallback } from '@wordpress/element';
 import { store as preferencesStore } from '@wordpress/preferences';
 import { privateApis as routerPrivateApis } from '@wordpress/router';
-import { layout, seen } from '@wordpress/icons';
 
 /**
  * Internal dependencies
@@ -17,11 +15,9 @@ import SidebarNavigationScreen from '../sidebar-navigation-screen';
 import { unlock } from '../../lock-unlock';
 import { store as editSiteStore } from '../../store';
 import SidebarNavigationItem from '../sidebar-navigation-item';
-import StyleBook from '../style-book';
 import useGlobalStylesRevisions from '../global-styles/screen-revisions/use-global-styles-revisions';
 import SidebarNavigationScreenDetailsFooter from '../sidebar-navigation-screen-details-footer';
 import { MainSidebarNavigationContent } from '../sidebar-navigation-screen-main';
-import SidebarButton from '../sidebar-button';
 
 const { useLocation, useHistory } = unlock( routerPrivateApis );
 
@@ -52,12 +48,9 @@ export function SidebarNavigationItemGlobalStyles( props ) {
 export default function SidebarNavigationScreenGlobalStyles() {
 	const history = useHistory();
 	const { params } = useLocation();
-	const { canvas = 'view', path = '' } = params;
 	const { revisions, isLoading: isLoadingRevisions } =
 		useGlobalStylesRevisions();
 	const { openGeneralSidebar } = useDispatch( editSiteStore );
-	const [ isViewingStyleBook, setIsViewingStyleBook ] = useState( true );
-	const isMobileViewport = useViewportMatch( 'medium', '<' );
 	const { setEditorCanvasContainerView } = unlock(
 		useDispatch( editSiteStore )
 	);
@@ -117,25 +110,6 @@ export default function SidebarNavigationScreenGlobalStyles() {
 				content={
 					<MainSidebarNavigationContent activeItem="styles-navigation-item" />
 				}
-				actions={
-					<>
-						{ ! isMobileViewport && (
-							<SidebarButton
-								icon={ isViewingStyleBook ? layout : seen }
-								label={
-									isViewingStyleBook
-										? __( 'See homepage' )
-										: __( 'See style Book' )
-								}
-								onClick={ () =>
-									setIsViewingStyleBook(
-										! isViewingStyleBook
-									)
-								}
-							/>
-						) }
-					</>
-				}
 				footer={
 					shouldShowGlobalStylesFooter && (
 						<SidebarNavigationScreenDetailsFooter
@@ -145,28 +119,6 @@ export default function SidebarNavigationScreenGlobalStyles() {
 					)
 				}
 			/>
-			{ canvas === 'view' && isViewingStyleBook && (
-				<StyleBook
-					enableResizing={ false }
-					showCloseButton={ false }
-					showTabs={ false }
-					isSelected={ ( blockName ) =>
-						// Match '/blocks/core%2Fbutton' and
-						// '/blocks/core%2Fbutton/typography', but not
-						// '/blocks/core%2Fbuttons'.
-						path ===
-							`/wp_global_styles/blocks/${ encodeURIComponent(
-								blockName
-							) }` ||
-						path.startsWith(
-							`/wp_global_styles/blocks/${ encodeURIComponent(
-								blockName
-							) }/`
-						)
-					}
-					path={ path }
-				/>
-			) }
 		</>
 	);
 }

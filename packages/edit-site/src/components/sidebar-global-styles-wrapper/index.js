@@ -4,8 +4,9 @@
 import { __ } from '@wordpress/i18n';
 import { useMemo, useState } from '@wordpress/element';
 import { privateApis as routerPrivateApis } from '@wordpress/router';
-import { layout, seen } from '@wordpress/icons';
+import { globe, seen, check } from '@wordpress/icons';
 import { useViewportMatch } from '@wordpress/compose';
+import { DropdownMenu, MenuGroup, MenuItem } from '@wordpress/components';
 
 /**
  * Internal dependencies
@@ -13,12 +14,54 @@ import { useViewportMatch } from '@wordpress/compose';
 import GlobalStylesUI from '../global-styles/ui';
 import Page from '../page';
 import { unlock } from '../../lock-unlock';
-import SidebarButton from '../sidebar-button';
 import StyleBook from '../style-book';
 import { STYLE_BOOK_COLOR_GROUPS } from '../style-book/constants';
 
 const { useLocation, useHistory } = unlock( routerPrivateApis );
 const GLOBAL_STYLES_PATH_PREFIX = '/wp_global_styles';
+
+const GlobalStylesPageActions = ( {
+	isStyleBookOpened,
+	setIsStyleBookOpened,
+} ) => {
+	return (
+		<DropdownMenu
+			icon={ isStyleBookOpened ? seen : globe }
+			label={
+				isStyleBookOpened
+					? __( 'View site home template' )
+					: __( 'View style book' )
+			}
+		>
+			{ ( { onClose } ) => (
+				<>
+					<MenuGroup>
+						<MenuItem
+							icon={ isStyleBookOpened ? check : null }
+							onClick={ () => {
+								setIsStyleBookOpened( true );
+								onClose();
+							} }
+							info={ __( 'Preview blocks and styles' ) }
+						>
+							{ __( 'Style book' ) }
+						</MenuItem>
+						<MenuItem
+							icon={ isStyleBookOpened ? null : check }
+							onClick={ () => {
+								setIsStyleBookOpened( false );
+								onClose();
+							} }
+							info={ __( 'Preview site home template' ) }
+						>
+							{ __( 'Site' ) }
+						</MenuItem>
+					</MenuGroup>
+				</>
+			) }
+		</DropdownMenu>
+	);
+};
 
 export default function GlobalStylesUIWrapper() {
 	const { params } = useLocation();
@@ -43,25 +86,17 @@ export default function GlobalStylesUIWrapper() {
 			},
 		];
 	}, [ pathWithPrefix, history ] );
+
 	return (
 		<>
 			<Page
 				actions={
-					<>
-						{ ! isMobileViewport && (
-							<SidebarButton
-								icon={ isStyleBookOpened ? layout : seen }
-								label={
-									isStyleBookOpened
-										? __( 'View home template' )
-										: __( 'View style book' )
-								}
-								onClick={ () =>
-									setIsStyleBookOpened( ! isStyleBookOpened )
-								}
-							/>
-						) }
-					</>
+					! isMobileViewport ? (
+						<GlobalStylesPageActions
+							isStyleBookOpened={ isStyleBookOpened }
+							setIsStyleBookOpened={ setIsStyleBookOpened }
+						/>
+					) : null
 				}
 				className="edit-site-styles"
 				title={ __( 'Styles' ) }

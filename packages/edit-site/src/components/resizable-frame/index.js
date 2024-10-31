@@ -82,11 +82,11 @@ function ResizableFrame( {
 	isOversized,
 	setIsOversized,
 	isReady,
-	hasResize = true,
 	children,
 	/** The default (unresized) width/height of the frame, based on the space availalbe in the viewport. */
 	defaultSize,
 	innerContentStyle,
+	isInteractive = true,
 } ) {
 	const history = useHistory();
 	const { params } = useLocation();
@@ -247,7 +247,7 @@ function ResizableFrame( {
 				}
 			} }
 			whileHover={
-				canvas === 'view'
+				canvas === 'view' && isInteractive
 					? {
 							scale: 1.005,
 							transition: {
@@ -264,8 +264,8 @@ function ResizableFrame( {
 				bottom: false,
 				// Resizing will be disabled until the editor content is loaded.
 				...( isRTL()
-					? { right: isReady && hasResize, left: false }
-					: { left: isReady && hasResize, right: false } ),
+					? { right: isReady, left: false }
+					: { left: isReady, right: false } ),
 				topRight: false,
 				bottomRight: false,
 				bottomLeft: false,

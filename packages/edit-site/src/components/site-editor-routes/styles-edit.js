@@ -17,11 +17,10 @@ export const stylesEditRoute = {
 	areas: {
 		content: <GlobalStylesUIWrapper />,
 		sidebar: <SidebarNavigationScreenGlobalStyles backPath={ {} } />,
-		preview: <Editor isPreviewOnly />,
-		mobile: <Editor isPreviewOnly />,
+		preview: <Editor isStaticPreview />,
+		mobile: <Editor isStaticPreview />,
 	},
 	widths: {
 		content: 380,
-		hasResize: false,
 	},
 };

@@ -17,11 +17,10 @@ export const stylesViewRoute = {
 	areas: {
 		content: <GlobalStylesUIWrapper />,
 		sidebar: <SidebarNavigationScreenGlobalStyles backPath={ {} } />,
-		preview: <Editor isPreviewOnly />,
+		preview: <Editor isStaticPreview />,
 		mobile: <GlobalStylesUIWrapper />,
 	},
 	widths: {
 		content: 380,
-		hasResize: false,
 	},
 };

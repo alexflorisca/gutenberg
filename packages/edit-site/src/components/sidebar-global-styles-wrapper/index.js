@@ -15,6 +15,7 @@ import Page from '../page';
 import { unlock } from '../../lock-unlock';
 import SidebarButton from '../sidebar-button';
 import StyleBook from '../style-book';
+import { STYLE_BOOK_COLOR_GROUPS } from '../style-book/constants';
 
 const { useLocation, useHistory } = unlock( routerPrivateApis );
 const GLOBAL_STYLES_PATH_PREFIX = '/wp_global_styles';
@@ -87,6 +88,22 @@ export default function GlobalStylesUIWrapper() {
 						)
 					}
 					path={ path }
+					onSelect={ ( blockName ) => {
+						if (
+							STYLE_BOOK_COLOR_GROUPS.find(
+								( group ) => group.slug === blockName
+							)
+						) {
+							// Go to color palettes Global Styles.
+							onPathChange( '/colors/palette' );
+							return;
+						}
+
+						// Now go to the selected block.
+						onPathChange(
+							`/blocks/${ encodeURIComponent( blockName ) }`
+						);
+					} }
 				/>
 			) }
 		</>

@@ -80,7 +80,7 @@ const siteIconVariants = {
 
 export default function EditSiteEditor( {
 	isPostsList = false,
-	isPreviewOnly,
+	isStaticPreview,
 } ) {
 	const disableMotion = useReducedMotion();
 	const { params } = useLocation();
@@ -131,7 +131,7 @@ export default function EditSiteEditor( {
 	useEditorTitle();
 	const _isPreviewingTheme = isPreviewingTheme();
 	const hasDefaultEditorCanvasView = ! useHasEditorCanvasContainer();
-	const iframeProps = useEditorIframeProps( isPreviewOnly );
+	const iframeProps = useEditorIframeProps( isStaticPreview );
 	const isEditMode = canvas === 'edit';
 	const postWithTemplate = !! contextPostId;
 	const loadingProgressId = useInstanceId(
@@ -149,7 +149,9 @@ export default function EditSiteEditor( {
 				css:
 					canvas === 'view'
 						? `body{min-height: 100vh; ${
-								currentPostIsTrashed ? '' : 'cursor: pointer;'
+								currentPostIsTrashed || isStaticPreview
+									? ''
+									: 'cursor: pointer;'
 						  }}`
 						: undefined,
 			},

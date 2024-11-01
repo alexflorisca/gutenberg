@@ -17,7 +17,7 @@ export const stylesViewRoute = {
 	areas: {
 		content: <GlobalStylesUIWrapper />,
 		sidebar: <SidebarNavigationScreenGlobalStyles backPath={ {} } />,
-		preview: <Editor isStaticPreview />,
+		preview: <Editor />,
 		mobile: <GlobalStylesUIWrapper />,
 	},
 	widths: {

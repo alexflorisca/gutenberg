@@ -86,7 +86,6 @@ function ResizableFrame( {
 	/** The default (unresized) width/height of the frame, based on the space availalbe in the viewport. */
 	defaultSize,
 	innerContentStyle,
-	isInteractive = true,
 } ) {
 	const history = useHistory();
 	const { params } = useLocation();
@@ -247,7 +246,7 @@ function ResizableFrame( {
 				}
 			} }
 			whileHover={
-				canvas === 'view' && isInteractive
+				canvas === 'view'
 					? {
 							scale: 1.005,
 							transition: {

@@ -213,10 +213,6 @@ export default function Layout( { route } ) {
 													gradientValue ??
 													backgroundColor,
 											} }
-											isInteractive={
-												areas.preview?.props
-													?.isStaticPreview !== true
-											}
 										>
 											{ areas.preview }
 										</ResizableFrame>

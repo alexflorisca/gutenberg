@@ -17,8 +17,8 @@ export const stylesEditRoute = {
 	areas: {
 		content: <GlobalStylesUIWrapper />,
 		sidebar: <SidebarNavigationScreenGlobalStyles backPath={ {} } />,
-		preview: <Editor isStaticPreview />,
-		mobile: <Editor isStaticPreview />,
+		preview: <Editor />,
+		mobile: <Editor />,
 	},
 	widths: {
 		content: 380,

@@ -20,7 +20,7 @@ import { unlock } from '../../lock-unlock';
 
 const { useLocation, useHistory } = unlock( routerPrivateApis );
 
-export default function useEditorIframeProps( isStaticPreview ) {
+export default function useEditorIframeProps() {
 	const { params } = useLocation();
 	const history = useHistory();
 	const { canvas = 'view' } = params;
@@ -51,7 +51,6 @@ export default function useEditorIframeProps( isStaticPreview ) {
 		onKeyDown: ( event ) => {
 			const { keyCode } = event;
 			if (
-				! isStaticPreview &&
 				( keyCode === ENTER || keyCode === SPACE ) &&
 				! currentPostIsTrashed
 			) {
@@ -61,13 +60,10 @@ export default function useEditorIframeProps( isStaticPreview ) {
 				} );
 			}
 		},
-		onClick: () => {
-			if ( ! isStaticPreview ) {
-				history.push( { ...params, canvas: 'edit' }, undefined, {
-					transition: 'canvas-mode-edit-transition',
-				} );
-			}
-		},
+		onClick: () =>
+			history.push( { ...params, canvas: 'edit' }, undefined, {
+				transition: 'canvas-mode-edit-transition',
+			} ),
 		onClickCapture: ( event ) => {
 			if ( currentPostIsTrashed ) {
 				event.preventDefault();
@@ -79,7 +75,7 @@ export default function useEditorIframeProps( isStaticPreview ) {
 
 	return {
 		className: clsx( 'edit-site-visual-editor__editor-canvas', {
-			'is-focused': isFocused && ! isStaticPreview && canvas === 'view',
+			'is-focused': isFocused && canvas === 'view',
 		} ),
 		...( canvas === 'view' ? viewModeIframeProps : {} ),
 	};

@@ -4,9 +4,11 @@
 import { __ } from '@wordpress/i18n';
 import { useMemo, useState } from '@wordpress/element';
 import { privateApis as routerPrivateApis } from '@wordpress/router';
-import { globe, seen, check } from '@wordpress/icons';
 import { useViewportMatch } from '@wordpress/compose';
-import { DropdownMenu, MenuGroup, MenuItem } from '@wordpress/components';
+import {
+	Button,
+	privateApis as componentsPrivateApis,
+} from '@wordpress/components';
 
 /**
  * Internal dependencies
@@ -18,6 +20,7 @@ import StyleBook from '../style-book';
 import { STYLE_BOOK_COLOR_GROUPS } from '../style-book/constants';
 
 const { useLocation, useHistory } = unlock( routerPrivateApis );
+const { Menu } = unlock( componentsPrivateApis );
 const GLOBAL_STYLES_PATH_PREFIX = '/wp_global_styles';
 
 const GlobalStylesPageActions = ( {
@@ -25,41 +28,37 @@ const GlobalStylesPageActions = ( {
 	setIsStyleBookOpened,
 } ) => {
 	return (
-		<DropdownMenu
-			icon={ isStyleBookOpened ? seen : globe }
-			label={
-				isStyleBookOpened
-					? __( 'View site home template' )
-					: __( 'View style book' )
+		<Menu
+			trigger={
+				<Button __next40pxDefaultSize variant="secondary">
+					{ __( 'Preview' ) }
+				</Button>
 			}
 		>
-			{ ( { onClose } ) => (
-				<>
-					<MenuGroup>
-						<MenuItem
-							icon={ isStyleBookOpened ? check : null }
-							onClick={ () => {
-								setIsStyleBookOpened( true );
-								onClose();
-							} }
-							info={ __( 'Preview blocks and styles' ) }
-						>
-							{ __( 'Style book' ) }
-						</MenuItem>
-						<MenuItem
-							icon={ isStyleBookOpened ? null : check }
-							onClick={ () => {
-								setIsStyleBookOpened( false );
-								onClose();
-							} }
-							info={ __( 'Preview site home template' ) }
-						>
-							{ __( 'Site' ) }
-						</MenuItem>
-					</MenuGroup>
-				</>
-			) }
-		</DropdownMenu>
+			<Menu.RadioItem
+				value
+				checked={ isStyleBookOpened }
+				name="radio-controlled"
+				onChange={ () => setIsStyleBookOpened( true ) }
+				defaultChecked
+			>
+				<Menu.ItemLabel>{ __( 'Style book' ) }</Menu.ItemLabel>
+				<Menu.ItemHelpText>
+					{ __( 'Preview blocks and styles.' ) }
+				</Menu.ItemHelpText>
+			</Menu.RadioItem>
+			<Menu.RadioItem
+				value={ false }
+				checked={ ! isStyleBookOpened }
+				name="radio-controlled"
+				onChange={ () => setIsStyleBookOpened( false ) }
+			>
+				<Menu.ItemLabel>{ __( 'Site' ) }</Menu.ItemLabel>
+				<Menu.ItemHelpText>
+					{ __( 'Preview your site.' ) }
+				</Menu.ItemHelpText>
+			</Menu.RadioItem>
+		</Menu>
 	);
 };
 

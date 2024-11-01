@@ -29,7 +29,7 @@ export const MenuRadioItem = forwardRef<
 	HTMLDivElement,
 	WordPressComponentProps< MenuRadioItemProps, 'div', false >
 >( function MenuRadioItem(
-	{ suffix, children, onBlur, hideOnClick = false, ...props },
+	{ suffix, children, onBlur, hideOnClick = false, checkedPrefix, ...props },
 	ref
 ) {
 	// TODO: Remove when https://github.com/ariakit/ariakit/issues/4083 is fixed
@@ -51,7 +51,7 @@ export const MenuRadioItem = forwardRef<
 				// Override some ariakit inline styles
 				style={ { width: 'auto', height: 'auto' } }
 			>
-				<Icon icon={ radioCheck } size={ 24 } />
+				{ checkedPrefix || <Icon icon={ radioCheck } size={ 24 } /> }
 			</Ariakit.MenuItemCheck>
 
 			<Styled.MenuItemContentWrapper>

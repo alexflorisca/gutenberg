@@ -173,6 +173,10 @@ export interface MenuRadioItemProps
 	 */
 	checked?: boolean;
 	/**
+	 * The contents of the checked radio menu item's prefix.
+	 */
+	checkedPrefix?: React.ReactNode;
+	/**
 	 * The checked state of the radio menu item when it is initially rendered.
 	 * Use when not wanting to control its checked state.
 	 */

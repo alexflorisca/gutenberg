@@ -7,7 +7,7 @@ import { css } from '@emotion/react';
 /**
  * WordPress dependencies
  */
-import { customLink, formatCapitalize } from '@wordpress/icons';
+import { customLink, formatCapitalize, check } from '@wordpress/icons';
 import { useState, useMemo, useContext } from '@wordpress/element';
 
 /**
@@ -308,6 +308,29 @@ export const WithRadios: StoryFn< typeof Menu > = ( props ) => {
 					<Menu.ItemHelpText>Initially checked</Menu.ItemHelpText>
 				</Menu.RadioItem>
 			</Menu.Group>
+			<Menu.Group>
+				<Menu.GroupLabel>With custom checked prefix</Menu.GroupLabel>
+				<Menu.RadioItem
+					name="radio-uncontrolled-custom-checked-prefix"
+					value="one"
+					defaultChecked
+					checkedPrefix={ <Icon icon={ check } size={ 24 } /> }
+				>
+					<Menu.ItemLabel>Radio item 1</Menu.ItemLabel>
+					<Menu.ItemHelpText>
+						Checked with custom prefix
+					</Menu.ItemHelpText>
+				</Menu.RadioItem>
+				<Menu.RadioItem
+					name="radio-uncontrolled-custom-checked-prefix"
+					value="two"
+					checkedPrefix={ <Icon icon={ check } size={ 24 } /> }
+				>
+					<Menu.ItemLabel>Radio item 2</Menu.ItemLabel>
+					<Menu.ItemHelpText>Initially unchecked</Menu.ItemHelpText>
+				</Menu.RadioItem>
+			</Menu.Group>
+			<Menu.Separator />
 		</Menu>
 	);
 };

@@ -49,9 +49,14 @@ function useScrollRectIntoView(
 		const rightOverflow = childRightEdge + margin - parentRightEdge;
 		const leftOverflow = parentScroll - ( childLeft - margin );
 		if ( leftOverflow > 0 ) {
-			parent.scroll( { left: parentScroll - leftOverflow } );
+			/**
+			 * The optional chaining is used here to avoid unit test failures.
+			 * It can be removed when JSDOM supports `Element` scroll methods.
+			 * See: https://github.com/WordPress/gutenberg/pull/66498#issuecomment-2441146096
+			 */
+			parent.scroll?.( { left: parentScroll - leftOverflow } );
 		} else if ( rightOverflow > 0 ) {
-			parent.scroll( { left: parentScroll + rightOverflow } );
+			parent.scroll?.( { left: parentScroll + rightOverflow } );
 		}
 	}, [ margin, parent, rect ] );
 }

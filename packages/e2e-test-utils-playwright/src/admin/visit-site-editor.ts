@@ -54,13 +54,13 @@ export async function visitSiteEditor(
 
 		// Wait for the canvas loader to appear first, so that the locator that
 		// waits for the hidden state doesn't resolve prematurely.
-		await canvasLoader.waitFor( { state: 'visible' } );
+		await canvasLoader.waitFor( { state: 'visible', timeout: 60000 } );
 		await canvasLoader.waitFor( {
 			state: 'hidden',
 			// Bigger timeout is needed for larger entities, like the Large Post
 			// HTML fixture that we load for performance tests, which often
 			// doesn't make it under the default timeout value.
-			timeout: 60_000,
+			timeout: 60000,
 		} );
 	}
 
